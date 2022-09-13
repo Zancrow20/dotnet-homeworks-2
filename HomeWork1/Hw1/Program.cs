@@ -4,7 +4,6 @@
 using Hw1;
 public class Program
 {
-    public static bool isFalse { get; set; }
     public static int Main(string[] args)
     {
         try

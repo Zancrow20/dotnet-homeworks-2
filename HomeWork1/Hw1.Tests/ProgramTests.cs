@@ -21,7 +21,7 @@ public class ProgramTests
     [InlineData("1", "+")]
     [InlineData("1", ".", "3")]
     [InlineData("1", "2", "3")]
-    [InlineData("1", "2", "3")]
+    [InlineData("+", "3")]
     [InlineData("f", "+", "3")]
     public void TestProgramWrongInput(params string[] input)
     {
