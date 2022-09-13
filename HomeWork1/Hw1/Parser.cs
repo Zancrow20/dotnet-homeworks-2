@@ -1,3 +1,5 @@
+
+
 namespace Hw1;
 
 public static class Parser
@@ -7,8 +9,12 @@ public static class Parser
         out CalculatorOperation operation, 
         out double val2)
     {
-        if (!IsArgLengthSupported(args) || !Double.TryParse(args[0], out val1) || !Double.TryParse(args[2], out val2))
-            throw new ArgumentException();
+        if (!IsArgLengthSupported(args))
+            throw new ArgumentException("Incorrect length:", nameof(args));
+        if (!Double.TryParse(args[0], out val1))
+            throw new ArgumentException("Incorrect first value:", nameof(val1));
+        if (!Double.TryParse(args[2], out val2))
+            throw new ArgumentException("Incorrect second value:", nameof(val2));
         operation = ParseOperation(args[1]);
     }
 
