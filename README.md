@@ -1,7 +1,7 @@
 # Домашняя работа для третьего учебного семестра (2 год обучения)
 
 ![.NET](https://github.com/Zancrow20/dotnet-homeworks-2/actions/workflows/dotnet.yml/badge.svg)
-[![codecov](https://codecov.io/gh/Zancrow20/dotnet-homeworks-2/branch/develop/graph/badge.svg?token={token})](https://codecov.io/gh/Zancrow20/dotnet-homeworks-2)
+[![codecov](https://codecov.io/gh/Zancrow20/dotnet-homeworks-2/branch/develop/graph/badge.svg?token=MNYFZULMKI)](https://codecov.io/gh/Zancrow20/dotnet-homeworks-2)
 
 ## Как устроены Actions
 1. ***build***: *Проверка: собирается ли проект.*
