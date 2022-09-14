@@ -57,7 +57,5 @@ namespace Hw1Tests
             //assert
             Assert.Throws<ArgumentException>(() => Parser.ParseCalcArguments(args, out _, out _, out _));
         }
-        
-        
     }
 }
