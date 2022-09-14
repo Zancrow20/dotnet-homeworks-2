@@ -1,7 +1,22 @@
-﻿var arg1 = args[0];
-var operation = args[1];
-var arg2 = args[2];
+﻿
 
-// TODO: implement calculator logic
-var result = arg1 + operation + arg2;
-Console.WriteLine(result);
+
+using Hw1;
+public class Program
+{
+    public static int Main(string[] args)
+    {
+        try
+        {
+            Parser.ParseCalcArguments(args, out double arg1, out CalculatorOperation operation, out double arg2);
+            var res = Calculator.Calculate(arg1,operation,arg2);
+            Console.WriteLine(res);
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception : {ex.Message}");
+            return -1;
+        }
+    }
+}
