@@ -1,5 +1,5 @@
 ﻿.class public abstract sealed auto ansi beforefieldinit
-  Hw2.Calculator
+  Hw2.Calculator 
 {
     .method static public float64 
         Calculate(
@@ -22,8 +22,8 @@
         
         IL_0005: ldarg.1
         IL_0006: switch         (IL_000a, IL_000s, IL_000m, IL_000d)
-        IL_000e: br.s           IL_000a
-   
+        IL_000e: br.s           IL_00ae
+        
         //CalculatorOperation.Plus
         IL_000a: ldarg.0
         ldarg.2
