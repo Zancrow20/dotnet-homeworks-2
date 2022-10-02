@@ -13,7 +13,7 @@ public class SingleInitializationSingleton
     
     public int Delay { get; }
 
-    private static Lazy<SingleInitializationSingleton> _instanse = new(() => new SingleInitializationSingleton());
+    private static Lazy<SingleInitializationSingleton> _instance = new(() => new SingleInitializationSingleton());
     private SingleInitializationSingleton(int delay = DefaultDelay)
     {
         Delay = delay;
@@ -23,16 +23,14 @@ public class SingleInitializationSingleton
 
     public static void Reset()
     {
-        if(!_isInitialized)
-            return;
-        if (_isInitialized)
-        {
+        if(!_isInitialized) return;
+        if(_isInitialized)
             lock (Locker)
-            {
-                _instanse = new(() => new());
-                _isInitialized = false;   
-            }   
-        }
+                if (_isInitialized)
+                {
+                    _instance = new (() => new ());
+                    _isInitialized = false;
+                }
     }
 
     public static void Initialize(int delay)
@@ -40,16 +38,14 @@ public class SingleInitializationSingleton
         if (!_isInitialized)
         {
             lock (Locker)
-            {
                 if (!_isInitialized)
                 {
-                    _instanse = new(() => new (delay));
+                    _instance = new(() => new (delay));
                     _isInitialized = true;
-                    return;
                 }
-            }
         }
-        throw new InvalidOperationException("Singleton has already been initialized");
+        else 
+            throw new InvalidOperationException();
     }
 
     public static SingleInitializationSingleton Instance
@@ -57,7 +53,7 @@ public class SingleInitializationSingleton
         get {
             lock (Locker)
             {
-                return _instanse.Value;   
+                return _instance.Value;   
             }
         }
     }
