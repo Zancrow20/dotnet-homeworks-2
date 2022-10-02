@@ -29,8 +29,6 @@ public class SingleInitializationSingleton
         {
             lock (Locker)
             {
-                if(!_isInitialized)
-                    return;
                 _instanse = new(() => new());
                 _isInitialized = false;   
             }   
@@ -46,7 +44,8 @@ public class SingleInitializationSingleton
                 if (!_isInitialized)
                 {
                     _instanse = new(() => new (delay));
-                    _isInitialized = true;           
+                    _isInitialized = true;
+                    return;
                 }
             }
         }
