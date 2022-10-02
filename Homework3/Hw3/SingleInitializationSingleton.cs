@@ -7,7 +7,7 @@ public class SingleInitializationSingleton
 {
     private static readonly object Locker = new();
 
-    private static volatile bool _isInitialized = false;
+    private static volatile bool _isInitialized;
 
     public const int DefaultDelay = 3_000;
     
@@ -21,7 +21,7 @@ public class SingleInitializationSingleton
         Thread.Sleep(delay);
     }
 
-    internal static void Reset()
+    public static void Reset()
     {
         if(!_isInitialized)
             return;
