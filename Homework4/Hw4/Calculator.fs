@@ -16,4 +16,3 @@ let calculate (value1 : float) (operation : CalculatorOperation) (value2 : float
     | CalculatorOperation.Multiply -> value1 * value2
     | CalculatorOperation.Divide -> value1 / value2
     | CalculatorOperation.Undefined -> ArgumentOutOfRangeException() |> raise
-    | _ -> ArgumentOutOfRangeException() |> raise
