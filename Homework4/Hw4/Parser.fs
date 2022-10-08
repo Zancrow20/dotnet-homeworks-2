@@ -39,3 +39,4 @@ let parseCalcArguments(args : string[]) =
             match tryParseValues (args[0], args[2]) with
             | false -> ArgumentException() |> raise
             | true -> {arg1 = Double.Parse args[0]; arg2 = Double.Parse args[2]; operation = parseOperation args[1]}
+        | _ -> ArgumentOutOfRangeException() |> raise
