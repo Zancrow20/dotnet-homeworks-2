@@ -31,11 +31,12 @@ let tryParseValues (arg1 : string, arg2 : string) =
     
 let parseCalcArguments(args : string[]) =
     match isArgLengthSupported args with
-    | false -> ArgumentException() |> raise
+    | false -> ArgumentException("There must be 3 args") |> raise
     | true ->
-        match parseOperation args[1] with
-        | CalculatorOperation.Undefined -> ArgumentException() |> raise
-        | CalculatorOperation.Plus | CalculatorOperation.Minus | CalculatorOperation.Multiply | CalculatorOperation.Divide ->
+        let operation = parseOperation args[1]
+        match operation with
+        | CalculatorOperation.Undefined -> ArgumentException("Undefined operation") |> raise
+        | _ ->
             match tryParseValues (args[0], args[2]) with
-            | false -> ArgumentException() |> raise
-            | true -> {arg1 = Double.Parse args[0]; arg2 = Double.Parse args[2]; operation = parseOperation args[1]}
+            | true -> {arg1 = Double.Parse args[0]; arg2 = Double.Parse args[2]; operation = operation}
+            | false -> ArgumentException("First or second value is not double") |> raise
