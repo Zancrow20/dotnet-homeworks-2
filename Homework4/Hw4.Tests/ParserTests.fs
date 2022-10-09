@@ -3,6 +3,7 @@ module Hw4Tests.ParserTests
 open System
 open Hw4.Calculator
 open Hw4.Parser
+open Microsoft.FSharp.Core
 open Xunit
         
 [<Theory>]
@@ -18,9 +19,7 @@ let ``+, -, *, / parsed correctly`` (operation, operationExpected) =
     let options = parseCalcArguments args
     
     //assert
-    Assert.Equal(15.0, options.arg1)
     Assert.Equal(operationExpected, options.operation)
-    Assert.Equal(5.0, options.arg2); 
     
 [<Theory>]
 [<InlineData("f", "+", "3")>]
@@ -48,3 +47,35 @@ let ``Incorrect argument count throws ArgumentException``() =
     
     // act/assert
     Assert.Throws<ArgumentException>(fun () -> parseCalcArguments args |> ignore)
+    
+[<Theory>]
+[<InlineData(5.5)>]
+[<InlineData(7.0)>]
+[<InlineData(0.02)>]
+[<InlineData(-12.000001)>]
+[<InlineData(0.0)>]
+let ``First value parsed correctly`` firstValueExpected =
+    //arrange
+    let args = [|firstValueExpected.ToString(); "+"; "15"|]
+    
+    //act
+    let options = parseCalcArguments args
+    
+    //assert
+    Assert.Equal(firstValueExpected, options.arg1)
+    
+[<Theory>]
+[<InlineData(10.035)>]
+[<InlineData(0.0)>]
+[<InlineData(-2.1)>]
+[<InlineData(-12.7)>]
+[<InlineData(21.2)>]
+let ``Second value parsed correctly``(secondValueExpected) =
+    //arrange
+    let args = [|"12"; "*"; secondValueExpected.ToString()|]
+    
+    //act
+    let options = parseCalcArguments args
+    
+    //assert
+    Assert.Equal(secondValueExpected, options.arg2)
