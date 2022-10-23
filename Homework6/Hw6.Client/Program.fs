@@ -8,17 +8,20 @@ open System.Diagnostics.CodeAnalysis
 open System.Threading.Tasks
 open Microsoft.FSharp.Control
 
-
+[<ExcludeFromCodeCoverage>]
 let httpClient = new HttpClient()
 
+[<ExcludeFromCodeCoverage>]
 let setUri localhostPort firstValue operation secondValue =
     $"http://localhost:{localhostPort}/calculate?value1={firstValue}&operation={operation}&value2={secondValue}"
 
+[<ExcludeFromCodeCoverage>]
 let checkForPlusOperation operation =
     match operation with
     | "+" -> "%2b"
     | _ -> operation
     
+[<ExcludeFromCodeCoverage>]
 let getResponseAsync(uri : string) =
     async
         {

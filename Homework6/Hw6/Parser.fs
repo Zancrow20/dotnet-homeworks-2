@@ -16,6 +16,7 @@ let convertToOperation operation =
     | "Divide" -> "/"
     | _ -> operation
 
+[<ExcludeFromCodeCoverage>]
 let isArgLengthSupported (args:string[]) =
     match Array.length args with
     | 3 -> Ok(args)
