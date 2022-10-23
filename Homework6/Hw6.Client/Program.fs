@@ -1,6 +1,5 @@
 
-[<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
-module Hw6.Client.Program
+
 
 open System
 open System.Net.Http

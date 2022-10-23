@@ -95,5 +95,34 @@ namespace Hw6Tests
             else
                 Assert.Contains(expectedValueOrError, result);
         }
+
+
+        [Theory]
+        [InlineData("/calculate?value1=5&operation=Something&value2=6", HttpStatusCode.BadRequest)]
+        [InlineData("/calculate?value1=5&", HttpStatusCode.BadRequest)]
+        [InlineData("/calculate?first=1&operation=Divide&value2=2", HttpStatusCode.BadRequest)]
+        [InlineData("/calculate?value1=1&action=Divide&value2=2", HttpStatusCode.BadRequest)]
+        [InlineData("/calculate?value1=1&operation=Divide&second=2", HttpStatusCode.BadRequest)]
+        [InlineData("/calculate?value1=1&operation=+&value2=2", HttpStatusCode.BadRequest)]
+        public async Task TestClientByWrongData(string wrongUrl, HttpStatusCode statusCode) =>
+            await TestConsoleClientCalculatorAsync(wrongUrl, statusCode);
+
+        [Theory]
+        [InlineData("/calculate?value1=5&operation=Plus&value2=6", HttpStatusCode.OK)]
+        [InlineData("/calculate?value1=1&operation=Divide&value2=2", HttpStatusCode.OK)]
+        [InlineData("/calculate?value1=10&operation=Plus&value2=11", HttpStatusCode.OK)]
+        [InlineData("/calculate?value1=1&operation=Divide&value2=0", HttpStatusCode.OK)]
+        [InlineData("/calculate?value1=1&operation=Plus&value2=2", HttpStatusCode.OK)]
+        public async Task TestClientByRightData(string rightUrl, HttpStatusCode statusCode) =>
+            await TestConsoleClientCalculatorAsync(rightUrl, statusCode);
+        
+        private async Task TestConsoleClientCalculatorAsync(string url, HttpStatusCode expectedStatusCode)
+        {
+           
+            var client = _factory.CreateClient();
+            var response = await client.GetAsync(url);
+            Assert.True(response.StatusCode == expectedStatusCode);
+            
+        }
     }
 }
