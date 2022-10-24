@@ -68,6 +68,9 @@ namespace Hw6Tests
         [InlineData("15.6", "5.6", "@", "Could not parse value '@'", HttpStatusCode.BadRequest)]
         [InlineData("15.6", "5.6", "$", "Could not parse value '$'", HttpStatusCode.BadRequest)]
         [InlineData("15.6", "5.6", "^", "Could not parse value '^'", HttpStatusCode.BadRequest)]
+        [InlineData("15.6", "5.6", "?", "Could not parse value '?'", HttpStatusCode.BadRequest)]
+        [InlineData("15.6", "20.6", ";", "Could not parse value ';'", HttpStatusCode.BadRequest)]
+        [InlineData("15.6", "20.6", ":", "Could not parse value ':'", HttpStatusCode.BadRequest)]
         public async Task TestIncorrectOperation(string value1, string value2, string operation,
             string expectedValue, HttpStatusCode statusCode) =>
             await RunTest(value1, value2, operation, expectedValue, statusCode);

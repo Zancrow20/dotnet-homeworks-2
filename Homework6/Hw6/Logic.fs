@@ -13,6 +13,7 @@ type Values =
         value2:string
     }
 
+[<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 let calculatorHandler: HttpHandler =
     fun (next : HttpFunc) (ctx : HttpContext) ->
         let values = ctx.BindQueryString<Values>()
