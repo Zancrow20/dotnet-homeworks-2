@@ -25,9 +25,8 @@ let getResponseAsync(uri : string) =
     async
         {
          let! response = httpClient.GetAsync(uri) |> Async.AwaitTask
-         let result = response.Content.ReadAsStringAsync()
-                      |> Async.AwaitTask
-                      |> Async.RunSynchronously   
+         let! result = response.Content.ReadAsStringAsync()
+                      |> Async.AwaitTask   
          do! Task.Delay(600) |> Async.AwaitTask
            
          match response.IsSuccessStatusCode with
