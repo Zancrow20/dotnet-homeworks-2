@@ -32,13 +32,13 @@ public static class HtmlHelperExtensions
         var inputWithSpan = CreateInput(propertyInfo, model);
         var input = inputWithSpan.Item1;
         var span = inputWithSpan.Item2;
-        return $"<div class=\"editor\">{label}{span}<div class=\"editor-field\">{input}</div></div>";
+        return $"<div class=\"editor\">{label}<br>{span}<div class=\"editor-field\">{input}</div></div>";
     }
 
     private static (string,string) CreateInput(PropertyInfo propertyInfo, object? model)
     {
         if (propertyInfo.PropertyType.IsEnum)
-            return ($"{GetDropdown(propertyInfo.PropertyType)}","");
+            return ($"{GetDropdown(propertyInfo.PropertyType)}",null)!;
         
         var span = ValidateData(propertyInfo, model);
         var input = GetInput(propertyInfo, model);
