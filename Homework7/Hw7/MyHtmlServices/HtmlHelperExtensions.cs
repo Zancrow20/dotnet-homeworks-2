@@ -37,11 +37,15 @@ public static class HtmlHelperExtensions
 
     private static (string,string) CreateInput(PropertyInfo propertyInfo, object? model)
     {
+        var span = "";
+        string input;
         if (propertyInfo.PropertyType.IsEnum)
-            return ($"{GetDropdown(propertyInfo.PropertyType)}",null)!;
-        
-        var span = ValidateData(propertyInfo, model);
-        var input = GetInput(propertyInfo, model);
+            input = GetDropdown(propertyInfo.PropertyType);
+        else
+        {
+            span = ValidateData(propertyInfo, model);
+            input = GetInput(propertyInfo, model);
+        }
         return (input,span);
     }
 
