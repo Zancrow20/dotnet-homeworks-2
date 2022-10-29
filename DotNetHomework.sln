@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Homework1", "Homework1", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Homework2", "Homework2", "{52918F1D-03D3-45AE-8612-7C8A60950AEB}"
     ProjectSection(SolutionItems) = preProject
-		Homework2\README.md = Homework2\README.md
+		  Homework2\README.md = Homework2\README.md
     EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Homework4", "Homework4", "{7E7C3A19-9AD4-48AE-AABE-6B1BA46F7B2A}"
