@@ -9,4 +9,6 @@ public interface ICalculator
     double Multiply(double val1, double val2);
     
     double Divide(double firstValue, double secondValue);
+    
+    double Calculate(double firstValue, Operation operation, double secondValue);
 }

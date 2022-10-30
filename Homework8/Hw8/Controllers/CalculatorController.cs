@@ -2,17 +2,32 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Hw8.Calculator;
 using Microsoft.AspNetCore.Mvc;
+using static Hw8.Calculator.Messages;
+using Hw8.Parser;
 
 namespace Hw8.Controllers;
 
 public class CalculatorController : Controller
 {
-    public ActionResult<double> Calculate([FromServices] ICalculator calculator,
-        string val1,
-        string operation,
-        string val2)
+    private IParser _parser;
+    public CalculatorController(IParser parser)
     {
-        throw new NotImplementedException();
+        _parser = parser;
+    }
+    
+    public ActionResult<double> Calculate([FromServices] ICalculator calculator,
+        [FromQuery] string? val1,
+        [FromQuery] string? operation,
+        [FromQuery] string? val2)
+    {
+        var message = _parser.TryParseValues(val1, operation, val2, out var res);
+        return message switch
+        {
+            OK => Ok(calculator.Calculate(res.firstValue, res.operation, res.secondValue)),
+            InvalidNumberMessage => BadRequest(InvalidNumberMessage),
+            InvalidOperationMessage => BadRequest(InvalidOperationMessage),
+            DivisionByZeroMessage => BadRequest(DivisionByZeroMessage)
+        };
     }
     
     [ExcludeFromCodeCoverage]
