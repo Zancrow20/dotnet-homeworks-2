@@ -50,10 +50,11 @@ public class IntegrationTests: IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData("/Calculator/Calculate?val1=10&operation=Plus", Messages.InvalidNumberMessage)]
+    [InlineData("/Calculator/Calculate?val1=10&operation=Plus", "Введите достаточное количество аргументов")]
     [InlineData("/Calculator/Calculate?val1=10&operation=Invalid&val2=10", Messages.InvalidOperationMessage)]
     [InlineData("/Calculator/Calculate?val1=10&operation=/&val2=10", Messages.InvalidOperationMessage)]
     [InlineData("/Calculator/Calculate?val1=10&operation=Divide&val2=0", Messages.DivisionByZeroMessage)]
+    [InlineData("/Calculator/Calculate?val1=10&operation=Plus&val2=10", "20")]
     public async Task CalculateAllAbleSituations(string query, string expectedMessage)
     {
         var response = await _client.GetAsync($"{_url}{query}");

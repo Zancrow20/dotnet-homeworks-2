@@ -27,7 +27,7 @@ public class CalculatorController : Controller
             InvalidNumberMessage => BadRequest(InvalidNumberMessage),
             InvalidOperationMessage => BadRequest(InvalidOperationMessage),
             DivisionByZeroMessage => BadRequest(DivisionByZeroMessage),
-            _ => BadRequest()
+            _ => BadRequest("Введите достаточное количество аргументов")
         };
     }
     

@@ -9,6 +9,8 @@ public class ParserImpl : IParser
     public string TryParseValues(string? firstValue, string? operation, string? secondValue, out Result result)
     {
         result = new Result();
+        if (firstValue == null || operation == null || secondValue == null)
+            return "Введите достаточное количество аргументов";
         if (!Double.TryParse(firstValue, NumberStyles.AllowDecimalPoint,NumberFormatInfo.InvariantInfo, out var val1) 
             || !Double.TryParse(secondValue,NumberStyles.AllowDecimalPoint,NumberFormatInfo.InvariantInfo, out var val2))
             return InvalidNumberMessage;
