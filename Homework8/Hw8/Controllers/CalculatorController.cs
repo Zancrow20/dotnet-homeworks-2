@@ -26,7 +26,8 @@ public class CalculatorController : Controller
             OK => Ok(calculator.Calculate(res.firstValue, res.operation, res.secondValue)),
             InvalidNumberMessage => BadRequest(InvalidNumberMessage),
             InvalidOperationMessage => BadRequest(InvalidOperationMessage),
-            DivisionByZeroMessage => BadRequest(DivisionByZeroMessage)
+            DivisionByZeroMessage => BadRequest(DivisionByZeroMessage),
+            _ => BadRequest()
         };
     }
     
