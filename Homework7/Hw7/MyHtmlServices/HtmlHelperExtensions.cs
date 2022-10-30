@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Hw7.MyHtmlServices;
@@ -30,23 +31,22 @@ public static class HtmlHelperExtensions
     {
         var label = CreateLabel(propertyInfo);
         var inputWithSpan = CreateInput(propertyInfo, model);
-        var input = inputWithSpan.Item1;
-        var span = inputWithSpan.Item2;
+        var input = inputWithSpan.Input;
+        var span = inputWithSpan.Span;
         return $"<div class=\"editor\">{label}<br>{span}<div class=\"editor-field\">{input}</div></div>";
     }
 
-    private static (string,string) CreateInput(PropertyInfo propertyInfo, object? model)
+    private static (string Input,string Span) CreateInput(PropertyInfo propertyInfo, object? model)
     {
-        var span = "";
-        string input;
+        var inputWithSpan = (Input: "", Span: "");
         if (propertyInfo.PropertyType.IsEnum)
-            input = GetDropdown(propertyInfo.PropertyType);
+            inputWithSpan.Input = GetDropdown(propertyInfo.PropertyType);
         else
         {
-            span = ValidateData(propertyInfo, model);
-            input = GetInput(propertyInfo, model);
+            inputWithSpan.Span = ValidateData(propertyInfo, model);
+            inputWithSpan.Input = GetInput(propertyInfo, model);
         }
-        return (input,span);
+        return inputWithSpan;
     }
 
     private static string GetInput(PropertyInfo propertyInfo, object? model)
@@ -60,27 +60,31 @@ public static class HtmlHelperExtensions
 
     private static string ValidateData(PropertyInfo propertyInfo, object? model)
     {
-        if(model != null)
-            foreach (var validatorAttribute in propertyInfo.GetCustomAttributes().OfType<ValidationAttribute>())
-            {
-                if (!validatorAttribute
-                        .IsValid(propertyInfo.GetValue(model)))
-                    return $"<span class=\"field-validation-valid\" " +
-                           $"data-valmsg-for=\"{propertyInfo.Name}\" " +
-                           $"data-valmsg-replace=\"true\">{validatorAttribute.ErrorMessage}</span>";   
-            }
+        var errorMessage = "";
+        if (model != null)
+        {
+            var property = propertyInfo.GetValue(model)!;
+            var attribute = propertyInfo
+                .GetCustomAttributes()
+                .OfType<ValidationAttribute>()
+                .FirstOrDefault(validatorAttribute => !validatorAttribute.IsValid(property));
+            errorMessage = attribute == null ? "" : attribute.ErrorMessage;
+        }
+        
         return $"<span class=\"field-validation-valid\" " +
-               $"data-valmsg-for=\"{propertyInfo.Name}\" data-valmsg-replace=\"true\"></span>";
+               $"data-valmsg-for=\"{propertyInfo.Name}\" " +
+               $"data-valmsg-replace=\"true\">{errorMessage}</span>";   
     }
 
     private static string GetDropdown(Type modelType)
     {
-        var stringBuilder = new StringBuilder();
-        if(modelType.IsEnum)
-            foreach (var option in modelType.GetEnumValues())
-                stringBuilder.Append($"<option value=\"{option}\">{option}</option>");
-        
-        return $"<select name=\"{modelType.Name}\" id=\"{modelType.Name}\">{stringBuilder.ToString()}</select>";
+        string options = "";
+        if (modelType.IsEnum)
+            options = Enum
+                .GetNames(modelType)
+                .Aggregate((current, next) => $"<option value=\"{current}\">{current}</option>" 
+                                              + $"<option value=\"{next}\">{next}</option>");
+        return $"<select name=\"{modelType.Name}\" id=\"{modelType.Name}\">{options}</select>";
     }
 
     private static string CreateLabel(PropertyInfo propertyInfo)
