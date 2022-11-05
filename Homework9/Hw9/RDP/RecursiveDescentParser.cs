@@ -28,81 +28,76 @@ public class RecursiveDescentParser
         }
     }
 
-    public (Expression Expression, bool IsOk) Parse() 
+    public Expression Parse() 
     {
         var result = !StatusOfExpression.IsGoodExpression ? 
-            (System.Linq.Expressions.Expression.Constant(-1), false) :
+            System.Linq.Expressions.Expression.Constant(-1) :
             Expression();
-        if(StatusOfExpression.IsGoodExpression && _operations.Contains(_tokens?[^1]))
-        {
-            StatusOfExpression = new Status(EndingWithOperation);
-            result = (System.Linq.Expressions.Expression.Constant(-1), false);
-        }
         if (_position == _tokens?.Length || !StatusOfExpression.IsGoodExpression) return result;
         if (_tokens?[_position] == ")")
             StatusOfExpression = new Status(IncorrectBracketsNumber);
         else if (!_operations.Contains(_tokens?[_position]))
             StatusOfExpression = new Status(UnknownCharacterMessage(_tokens![_position].ToCharArray()[0]));
-        result = (System.Linq.Expressions.Expression.Constant(-1), false);
+        result = System.Linq.Expressions.Expression.Constant(-1);
         return result;
     }
     
-    private (Expression Expression, bool IsOk) Expression() 
+    private Expression Expression() 
     {
-        var (firstExpression,isOkFirst) = Term();
-        if (!isOkFirst) return (firstExpression,isOkFirst);
+        var firstExpression= Term();
+        if (!StatusOfExpression.IsGoodExpression) return firstExpression;
         while (_position < _tokens?.Length)
         {
             var token = _tokens[_position];
             if (!token.Equals("+") && !token.Equals("-")) break;
             _position++;
-            var (secondExpression, isOkSecond) = Term();
-            if (isOkFirst && isOkSecond)
+            var secondExpression = Term();
+            if (StatusOfExpression.IsGoodExpression)
                 firstExpression = token.Equals("+")
                     ? System.Linq.Expressions.Expression.Add(firstExpression, secondExpression)
                     : System.Linq.Expressions.Expression.Subtract(firstExpression, secondExpression);
             else
-                return (System.Linq.Expressions.Expression.Constant(-1), false);
+                return System.Linq.Expressions.Expression.Constant(-1);
         }
 
-        return (firstExpression,isOkFirst);
+        return firstExpression;
     }
 
     
-    private (Expression Expression, bool IsOk) Term() 
+    private Expression Term() 
     {
-        var (firstExpression,isOkFirst) = Factor();
-        if (!isOkFirst) return (firstExpression,isOkFirst);
+        var firstExpression = Factor();
+        if (!StatusOfExpression.IsGoodExpression) return firstExpression;
         while (_position < _tokens?.Length) 
         {
             var token = _tokens[_position];
             if (!token.Equals("*") && !token.Equals("/")) break;
             _position++;
-            var (secondExpression, isOkSecond) = Factor();
-            if (isOkFirst && isOkSecond)
+            var secondExpression = Factor();
+            if (StatusOfExpression.IsGoodExpression)
                 firstExpression = token.Equals("*")
                     ? System.Linq.Expressions.Expression.Multiply(firstExpression, secondExpression)
                     : System.Linq.Expressions.Expression.Divide(firstExpression, secondExpression);
             else
-                return (System.Linq.Expressions.Expression.Constant(-1), false);
+                return System.Linq.Expressions.Expression.Constant(-1);
         }
         
-        return (firstExpression,isOkFirst);
+        return firstExpression;
     }
     
-    private (Expression Expression, bool IsOk) Factor() 
+    private Expression Factor() 
     {
         var next = _position < _tokens?.Length ? _tokens[_position] : string.Empty;
         var previous = _position - 1 >= 0 ? _tokens?[_position - 1] : string.Empty;
         if (next.Equals("(")) {
             _position++;
             var result = Expression();
-            if (!result.IsOk)
+            if (!StatusOfExpression.IsGoodExpression)
                 return result;
             if (_position >= _tokens?.Length)
             {
                 StatusOfExpression = new Status(IncorrectBracketsNumber);
-                return (System.Linq.Expressions.Expression.Constant(-1), false);
+                return System.Linq.Expressions.Expression.Constant(-1);
             }
             
             _position++;
@@ -112,12 +107,12 @@ public class RecursiveDescentParser
         return CheckAllSituations(next, previous);
     }
 
-    private (Expression Expression, bool IsOk) CheckAllSituations(string next, string? previous)
+    private Expression  CheckAllSituations(string next, string? previous)
     {
         if (double.TryParse(next, out var res))
         {
             _position++;
-            return (System.Linq.Expressions.Expression.Constant(res), true);
+            return System.Linq.Expressions.Expression.Constant(res);
         }
         
         if (_position == 0 && _operations.Contains(next))
@@ -130,7 +125,10 @@ public class RecursiveDescentParser
             StatusOfExpression = new Status(TwoOperationInRowMessage(previous ?? string.Empty, next));
         else if (Numbers.IsMatch(next))
             StatusOfExpression = new Status(NotNumberMessage(next));
-        
-        return (System.Linq.Expressions.Expression.Constant(-1), false);
+        else if(_operations.Contains(previous) && next == string.Empty)
+            StatusOfExpression = new Status(EndingWithOperation);
+        else
+            StatusOfExpression = new Status(UnknownCharacterMessage(next.ToCharArray()[0]));
+        return System.Linq.Expressions.Expression.Constant(-1);
     }
 }
