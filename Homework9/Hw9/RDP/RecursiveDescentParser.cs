@@ -97,19 +97,21 @@ public class RecursiveDescentParser
             _position++;
             return System.Linq.Expressions.Expression.Constant(res);
         }
-        
+        string message;
         if (_position == 0 && _operations.Contains(next))
-            throw new ArgumentException(StartingWithOperation);
-        if (next == ")" && _operations.Contains(previous))
-            throw new ArgumentException(OperationBeforeParenthesisMessage(previous ?? string.Empty));
-        if (previous == "(" && _operations.Contains(next))
-            throw new ArgumentException(InvalidOperatorAfterParenthesisMessage(next));
-        if (_operations.Contains(previous) && _operations.Contains(next))
-            throw new ArgumentException(TwoOperationInRowMessage(previous ?? string.Empty, next));
-        if (Numbers.IsMatch(next))
-            throw new ArgumentException(NotNumberMessage(next));
-        if(_operations.Contains(previous) && next == string.Empty)
-            throw new ArgumentException(EndingWithOperation);
-        throw new ArgumentException(UnknownCharacterMessage(next.ToCharArray()[0]));
+            message = StartingWithOperation;
+        else if (next == ")" && _operations.Contains(previous))
+            message = OperationBeforeParenthesisMessage(previous ?? string.Empty);
+        else if (previous == "(" && _operations.Contains(next))
+            message =InvalidOperatorAfterParenthesisMessage(next);
+        else if (_operations.Contains(previous) && _operations.Contains(next))
+            message = TwoOperationInRowMessage(previous ?? string.Empty, next);
+        else if (Numbers.IsMatch(next))
+            message = NotNumberMessage(next);
+        else if (_operations.Contains(previous) && next == string.Empty)
+            message = EndingWithOperation;
+        else
+            message = UnknownCharacterMessage(next.ToCharArray()[0]);
+        throw new ArgumentException(message);
     }
 }
