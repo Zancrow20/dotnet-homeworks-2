@@ -15,49 +15,39 @@ public class RecursiveDescentParser
     private static readonly Regex InputSplit = new ("(?<=[−+*/\\(\\)])|(?=[−+*/\\(\\)])");
     private static readonly Regex Numbers = new("[0-9]+");
     
-    public RecursiveDescentParser(string? expression)
+    public RecursiveDescentParser(string expression)
     {
-        if (string.IsNullOrEmpty(expression))
-            StatusOfExpression = new Status(EmptyString);
-        else
-        {
-            StatusOfExpression = new Status();
+        if (string.IsNullOrWhiteSpace(expression))
+            throw new NullReferenceException(EmptyString);
+        StatusOfExpression = new Status();
             _tokens = InputSplit.Split(expression)
                 .SelectMany(str => str.Split(' ', StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
-        }
     }
 
     public Expression Parse() 
     {
-        var result = !StatusOfExpression.IsGoodExpression ? 
-            System.Linq.Expressions.Expression.Constant(-1) :
-            Expression();
+        var result = Expression();
         if (_position == _tokens?.Length || !StatusOfExpression.IsGoodExpression) return result;
         if (_tokens?[_position] == ")")
-            StatusOfExpression = new Status(IncorrectBracketsNumber);
-        else if (!_operations.Contains(_tokens?[_position]))
-            StatusOfExpression = new Status(UnknownCharacterMessage(_tokens![_position].ToCharArray()[0]));
-        result = System.Linq.Expressions.Expression.Constant(-1);
+            throw new ArgumentException(IncorrectBracketsNumber);
+        if (!_operations.Contains(_tokens?[_position]))
+            throw new ArgumentException(UnknownCharacterMessage(_tokens![_position].ToCharArray()[0]));
         return result;
     }
     
     private Expression Expression() 
     {
         var firstExpression= Term();
-        if (!StatusOfExpression.IsGoodExpression) return firstExpression;
         while (_position < _tokens?.Length)
         {
             var token = _tokens[_position];
             if (!token.Equals("+") && !token.Equals("-")) break;
             _position++;
             var secondExpression = Term();
-            if (StatusOfExpression.IsGoodExpression)
-                firstExpression = token.Equals("+")
+            firstExpression = token.Equals("+")
                     ? System.Linq.Expressions.Expression.Add(firstExpression, secondExpression)
                     : System.Linq.Expressions.Expression.Subtract(firstExpression, secondExpression);
-            else
-                return System.Linq.Expressions.Expression.Constant(-1);
         }
 
         return firstExpression;
@@ -67,19 +57,15 @@ public class RecursiveDescentParser
     private Expression Term() 
     {
         var firstExpression = Factor();
-        if (!StatusOfExpression.IsGoodExpression) return firstExpression;
         while (_position < _tokens?.Length) 
         {
             var token = _tokens[_position];
             if (!token.Equals("*") && !token.Equals("/")) break;
             _position++;
             var secondExpression = Factor();
-            if (StatusOfExpression.IsGoodExpression)
-                firstExpression = token.Equals("*")
+            firstExpression = token.Equals("*")
                     ? System.Linq.Expressions.Expression.Multiply(firstExpression, secondExpression)
                     : System.Linq.Expressions.Expression.Divide(firstExpression, secondExpression);
-            else
-                return System.Linq.Expressions.Expression.Constant(-1);
         }
         
         return firstExpression;
@@ -95,10 +81,7 @@ public class RecursiveDescentParser
             if (!StatusOfExpression.IsGoodExpression)
                 return result;
             if (_position >= _tokens?.Length)
-            {
-                StatusOfExpression = new Status(IncorrectBracketsNumber);
-                return System.Linq.Expressions.Expression.Constant(-1);
-            }
+                throw new ArgumentException(IncorrectBracketsNumber);
             
             _position++;
             return result;
@@ -116,19 +99,17 @@ public class RecursiveDescentParser
         }
         
         if (_position == 0 && _operations.Contains(next))
-            StatusOfExpression = new Status(StartingWithOperation);
-        else if (next == ")" && _operations.Contains(previous))
-            StatusOfExpression = new Status(OperationBeforeParenthesisMessage(previous ?? string.Empty));
-        else if (previous == "(" && _operations.Contains(next))
-            StatusOfExpression = new Status(InvalidOperatorAfterParenthesisMessage(next));
-        else if (_operations.Contains(previous) && _operations.Contains(next))
-            StatusOfExpression = new Status(TwoOperationInRowMessage(previous ?? string.Empty, next));
-        else if (Numbers.IsMatch(next))
-            StatusOfExpression = new Status(NotNumberMessage(next));
-        else if(_operations.Contains(previous) && next == string.Empty)
-            StatusOfExpression = new Status(EndingWithOperation);
-        else
-            StatusOfExpression = new Status(UnknownCharacterMessage(next.ToCharArray()[0]));
-        return System.Linq.Expressions.Expression.Constant(-1);
+            throw new ArgumentException(StartingWithOperation);
+        if (next == ")" && _operations.Contains(previous))
+            throw new ArgumentException(OperationBeforeParenthesisMessage(previous ?? string.Empty));
+        if (previous == "(" && _operations.Contains(next))
+            throw new ArgumentException(InvalidOperatorAfterParenthesisMessage(next));
+        if (_operations.Contains(previous) && _operations.Contains(next))
+            throw new ArgumentException(TwoOperationInRowMessage(previous ?? string.Empty, next));
+        if (Numbers.IsMatch(next))
+            throw new ArgumentException(NotNumberMessage(next));
+        if(_operations.Contains(previous) && next == string.Empty)
+            throw new ArgumentException(EndingWithOperation);
+        throw new ArgumentException(UnknownCharacterMessage(next.ToCharArray()[0]));
     }
 }

@@ -10,12 +10,18 @@ public class MathCalculatorService : IMathCalculatorService
 {
     public async Task<CalculationMathExpressionResultDto> CalculateMathExpressionAsync(string? expression)
     {
-        var parser = new RecursiveDescentParser(expression);
-        var expressionTree = parser.Parse();
-        if (!parser.StatusOfExpression.IsGoodExpression)
-            return new CalculationMathExpressionResultDto(parser.StatusOfExpression.ErrorMessage);
-        var result = (double)((ConstantExpression)new CalcVisitorImpl().Visit(expressionTree)).Value!;
-        return double.IsNaN(result) ? new CalculationMathExpressionResultDto(DivisionByZero) : 
-            new CalculationMathExpressionResultDto(result);
+        var calculatorVisitor = new CalcVisitorImpl();
+        
+        try
+        {
+            var parser = new RecursiveDescentParser(expression);
+            var expressionTree = parser.Parse();
+            var result = (double)((ConstantExpression)calculatorVisitor.Visit(expressionTree)).Value!;
+            return new CalculationMathExpressionResultDto(result);
+        }
+        catch (Exception e)
+        {
+            return new CalculationMathExpressionResultDto(e.Message);
+        }
     }
 }

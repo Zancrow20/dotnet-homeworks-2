@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using static Hw9.ErrorMessages.MathErrorMessager;
 
 namespace Hw9.CalculatorVisitor;
 
@@ -6,8 +7,11 @@ public class CalcVisitorImpl : ExpressionVisitor
 {
     protected override Expression VisitBinary(BinaryExpression node)
     {
-        var result = CalculateExpressionsAsync(node);
-        return Expression.Constant(result.Result);
+        var task = CalculateExpressionsAsync(node);
+        var result = task.Result;
+        if (double.IsNaN(result))
+            throw new DivideByZeroException(DivisionByZero);
+        return Expression.Constant(result);
     }
 
     private static double Add(double leftNode, double rightNode)
@@ -20,9 +24,7 @@ public class CalcVisitorImpl : ExpressionVisitor
         => leftNode * rightNode;
 
     private static double Divide(double leftNode, double rightNode)
-        => rightNode == 0
-            ? double.NaN
-            : leftNode / rightNode;
+        => rightNode != 0 ? leftNode / rightNode : Double.NaN;
 
     private static async Task<double> CalculateExpressionsAsync(Expression expression)
         {
