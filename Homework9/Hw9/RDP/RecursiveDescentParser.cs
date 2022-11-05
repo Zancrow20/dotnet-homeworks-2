@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using Hw9.ReversePolishNotation;
 using static Hw9.ErrorMessages.MathErrorMessager;
 namespace Hw9.RDP;
 
@@ -10,7 +9,7 @@ public class RecursiveDescentParser
 
     private readonly string[]? _tokens;
     private int _position;
-    public Status StatusOfExpression;
+    private readonly bool IsGoodExpression;
 
     private static readonly Regex InputSplit = new ("(?<=[−+*/\\(\\)])|(?=[−+*/\\(\\)])");
     private static readonly Regex Numbers = new("[0-9]+");
@@ -19,7 +18,7 @@ public class RecursiveDescentParser
     {
         if (string.IsNullOrWhiteSpace(expression))
             throw new NullReferenceException(EmptyString);
-        StatusOfExpression = new Status();
+        IsGoodExpression = true;
             _tokens = InputSplit.Split(expression)
                 .SelectMany(str => str.Split(' ', StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
@@ -28,12 +27,10 @@ public class RecursiveDescentParser
     public Expression Parse() 
     {
         var result = Expression();
-        if (_position == _tokens?.Length || !StatusOfExpression.IsGoodExpression) return result;
-        if (_tokens?[_position] == ")")
-            throw new ArgumentException(IncorrectBracketsNumber);
-        if (!_operations.Contains(_tokens?[_position]))
-            throw new ArgumentException(UnknownCharacterMessage(_tokens![_position].ToCharArray()[0]));
-        return result;
+        if (_position == _tokens?.Length || !IsGoodExpression) return result;
+        var message = _tokens?[_position] == ")" ? IncorrectBracketsNumber : 
+            UnknownCharacterMessage(_tokens![_position].ToCharArray()[0]);
+        throw new ArgumentException(message);
     }
     
     private Expression Expression() 
@@ -78,9 +75,7 @@ public class RecursiveDescentParser
         if (next.Equals("(")) {
             _position++;
             var result = Expression();
-            if (!StatusOfExpression.IsGoodExpression)
-                return result;
-            if (_position >= _tokens?.Length)
+            if (_position >= _tokens?.Length)//Если войдёт дважды в рекурсию и не будет закрывающих скобок, то ошибка
                 throw new ArgumentException(IncorrectBracketsNumber);
             
             _position++;
