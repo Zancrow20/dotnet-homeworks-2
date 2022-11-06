@@ -32,7 +32,7 @@ public class CalcVisitorImpl : ExpressionVisitor
                 return await Task.FromResult((double) constantExpression.Value!);
     
             var binaryExpression = (BinaryExpression)expression;
-            await Task.Delay(800);
+            await Task.Delay(1000);
             var leftNode = CalculateExpressionsAsync(binaryExpression.Left);
             var rightNode = CalculateExpressionsAsync(binaryExpression.Right);
             
