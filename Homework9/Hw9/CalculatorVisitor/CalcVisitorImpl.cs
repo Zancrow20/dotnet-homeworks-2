@@ -49,7 +49,8 @@ public class CalcVisitorImpl : ExpressionVisitor
                 ExpressionType.Add => Add(leftNode, rightNode),
                 ExpressionType.Subtract => Subtract(leftNode, rightNode),
                 ExpressionType.Multiply => Multiply(leftNode, rightNode),
-                ExpressionType.Divide => Divide(leftNode,rightNode)
+                ExpressionType.Divide => Divide(leftNode,rightNode),
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
 }
