@@ -42,15 +42,14 @@ public class CalcVisitorImpl : ExpressionVisitor
                 return await Task.FromResult((double) constantExpression.Value!);
     
             await Task.Delay(1000);
-            var binaryExpression = (BinaryExpression)expression;
 
-            return binaryExpression.NodeType switch 
+            return expression.NodeType switch 
             {
                 ExpressionType.Add => Add(leftNode, rightNode),
                 ExpressionType.Subtract => Subtract(leftNode, rightNode),
                 ExpressionType.Multiply => Multiply(leftNode, rightNode),
                 ExpressionType.Divide => Divide(leftNode,rightNode),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new NotImplementedException("calculator doesn't support this operation")
             };
         }
 }
