@@ -25,7 +25,7 @@ public class RecursiveDescentParser : IRecursiveParser
     public Expression Parse()
     {
         var result = Expression();
-        if (_position == _tokens?.Length) return result;
+        if (_position == _tokens.Length) return result;
         if (_tokens[_position < _tokens.Length ? _position : ^1] == ")")
             _bracketsCount++;
         var message = _bracketsCount != 0
@@ -37,7 +37,7 @@ public class RecursiveDescentParser : IRecursiveParser
     private Expression Expression()
     {
         var firstExpression = Term();
-        while (_position < _tokens?.Length)
+        while (_position < _tokens.Length)
         {
             var token = _tokens[_position];
             if (!token.Equals("+") && !token.Equals("-")) break;
@@ -55,7 +55,7 @@ public class RecursiveDescentParser : IRecursiveParser
     private Expression Term()
     {
         var firstExpression = Factor();
-        while (_position < _tokens?.Length)
+        while (_position < _tokens.Length)
         {
             var token = _tokens[_position];
             if (!token.Equals("*") && !token.Equals("/")) break;
@@ -71,14 +71,14 @@ public class RecursiveDescentParser : IRecursiveParser
 
     private Expression Factor()
     {
-        var next = _position < _tokens?.Length ? _tokens[_position] : string.Empty;
-        var previous = _position - 1 >= 0 ? _tokens?[_position - 1] : string.Empty;
+        var next = _position < _tokens.Length ? _tokens[_position] : string.Empty;
+        var previous = _position - 1 >= 0 ? _tokens[_position - 1] : string.Empty;
         if (next.Equals("("))
         {
             _bracketsCount++;
             _position++;
             var result = Expression();
-            if (_tokens?[_position < _tokens.Length ? _position : ^1] != ")")
+            if (_tokens[_position < _tokens.Length ? _position : ^1] != ")")
                 throw new ArgumentException(IncorrectBracketsNumber);
             _bracketsCount--;
             _position++;
