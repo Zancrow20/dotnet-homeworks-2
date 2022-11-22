@@ -24,6 +24,10 @@ public class IntegrationCalculatorControllerTests : IClassFixture<WebApplication
 	[InlineData("3 - 4 / 2", "1")]
 	[InlineData("8 * (2 + 2) - 3 * 4", "20")]
 	[InlineData("10 - 3 * (-4)", "22")]
+	[InlineData("10 - 3 - (-4)", "11")]
+	[InlineData("2 * 2 * 2 * 2 * 2", "32")]
+	[InlineData("32 / 2 / 2 / 2 / 2 / 2 / 2", "0.5")]
+	[InlineData("32 / 2 + 3 * 3", "25")]
 	public async Task Calculate_CalculateExpression_Success(string expression, string result)
 	{
 		var response = await CalculateAsync(expression);
@@ -40,12 +44,20 @@ public class IntegrationCalculatorControllerTests : IClassFixture<WebApplication
 	[InlineData("2 - 2.23.1 - 23", $"{MathErrorMessager.NotNumber} 2.23.1")]
 	[InlineData("8 - / 2", $"{MathErrorMessager.TwoOperationInRow} - and /")]
 	[InlineData("8 + (34 - + 2)", $"{MathErrorMessager.TwoOperationInRow} - and +")]
+	[InlineData("4 +- 1", $"{MathErrorMessager.TwoOperationInRow} + and -")]
 	[InlineData("4 - 10 * (/10 + 2)", $"{MathErrorMessager.InvalidOperatorAfterParenthesis} (/")]
+	[InlineData("(*5 + 5)", $"{MathErrorMessager.InvalidOperatorAfterParenthesis} (*")]
 	[InlineData("10 - 2 * (10 - 1 /)", $"{MathErrorMessager.OperationBeforeParenthesis} /)")]
+	[InlineData("(11 /)", $"{MathErrorMessager.OperationBeforeParenthesis} /)")]
 	[InlineData("* 10 + 2", MathErrorMessager.StartingWithOperation)]
+	[InlineData("+ ", MathErrorMessager.StartingWithOperation)]
 	[InlineData("10 + 2 -", MathErrorMessager.EndingWithOperation)]
+	[InlineData("10 -", MathErrorMessager.EndingWithOperation)]
 	[InlineData("((10 + 2)", MathErrorMessager.IncorrectBracketsNumber)]
 	[InlineData("(10 - 2))", MathErrorMessager.IncorrectBracketsNumber)]
+	[InlineData("((10 / 2", MathErrorMessager.IncorrectBracketsNumber)]
+	[InlineData("(10 + 2) * (5 - 4", MathErrorMessager.IncorrectBracketsNumber)]
+	[InlineData("10 - 2)", MathErrorMessager.IncorrectBracketsNumber)]
 	[InlineData("10 / 0", MathErrorMessager.DivisionByZero)]
 	[InlineData("10 / (1 - 1)", MathErrorMessager.DivisionByZero)]
 	public async Task Calculate_CalculateExpression_Error(string expression, string result)
