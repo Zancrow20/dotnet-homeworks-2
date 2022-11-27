@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using Hw6;
 
 namespace Hw12;
 
-public class TestApplicationFactoryFSharp : WebApplicationFactory<TestApplicationFactoryFSharp>
-    // TODO: replace generic argument with the right one
+public class TestApplicationFactoryFSharp : WebApplicationFactory<App.Startup>
 {
 }

@@ -19,25 +19,25 @@ public class WebApplicationWorkingTimeTests
 	[Benchmark]
 	public async Task PlusOperationTimeTestCSharp()
 	{
-		await SendRequestCSharp("1", "+", "2");
+		await SendRequestCSharp("1", "Plus", "2");
 	}
 		
 	[Benchmark]
 	public async Task SubtractionOperationTimeTestCSharp()
 	{
-		await SendRequestCSharp("3", "-", "2");
+		await SendRequestCSharp("3", "Minus", "2");
 	}
 		
 	[Benchmark]
 	public async Task MultiplicationOperationTimeTestCSharp()
 	{
-		await SendRequestCSharp("10", "*", "3");
+		await SendRequestCSharp("10", "Multiply", "3");
 	}
 
 	[Benchmark]
 	public async Task DivisionOperationTimeTestCSharp()
 	{
-		await SendRequestCSharp("20", "/", "10");
+		await SendRequestCSharp("20", "Divide", "10");
 	}
 	
 	[Benchmark]
