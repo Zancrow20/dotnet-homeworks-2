@@ -21,4 +21,8 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hw13CacheCalculator\Hw13CacheCalculator.csproj" />
+    </ItemGroup>
 </Project>
