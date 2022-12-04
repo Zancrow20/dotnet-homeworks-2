@@ -14,7 +14,6 @@ namespace Hw13CacheCalculator
             builder.Services.AddControllersWithViews();
 
             builder.Services
-                .AddMathCalculator()
                 .AddCachedMathCalculator();
 
             var app = builder.Build();

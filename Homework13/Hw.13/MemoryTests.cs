@@ -15,14 +15,12 @@ public class MemoryTests
 {
     private MethodsForBenchmark _benchmarkMethod = null!;
     private string _testString = null!;
-    private static MethodInfo? _reflectionMethod;
-        
+
     [GlobalSetup]
     public void Setup()
     {
         _benchmarkMethod = new MethodsForBenchmark();
         _testString = "string";
-        _reflectionMethod = typeof(MethodsForBenchmark).GetMethod("Reflection");			
     }
 
     [Benchmark(Description = "Simple")]
@@ -46,7 +44,7 @@ public class MemoryTests
     [Benchmark(Description = "Generic")]
     public void TestGenericMethod()
     {
-        _benchmarkMethod.Generic<string>(_testString);
+        _benchmarkMethod.Generic(_testString);
     }
         
     [Benchmark(Description = "Dynamic")]
@@ -58,6 +56,6 @@ public class MemoryTests
     [Benchmark(Description = "Reflection")]
     public void TestReflectionMethod()
     {
-        _reflectionMethod?.Invoke(_benchmarkMethod, new object?[] { _testString });
+        _benchmarkMethod.Reflection(_testString);
     } 
 }

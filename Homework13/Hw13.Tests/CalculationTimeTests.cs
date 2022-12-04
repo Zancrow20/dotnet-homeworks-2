@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,9 +18,9 @@ public class CalculationTimeTests: IClassFixture<WebApplicationFactory<Program>>
     }
     
     [Theory]
-    [InlineData("2 + 3 + 4 + 6", 2990, 4500)]
-    [InlineData("(2 * 3 + 3 * 3) * (5 / 5 + 6 / 6)", 2990, 4500)]
-    [InlineData("(2 + 3) / 12 * 7 + 8 * 9", 3990, 5500)]
+    [InlineData("2 + 3 + 4 + 6", 2990, 4000)]
+    [InlineData("(2 * 3 + 3 * 3) * (5 / 5 + 6 / 6)", 2990, 4000)]
+    [InlineData("(2 + 3) / 12 * 7 + 8 * 9", 3990, 5000)]
     private async Task CalculatorController_ParallelTest(string expression, long minExpectedTime, long maxExpectedTime)
     {
         var executionTime = await GetRequestExecutionTime(expression);
@@ -38,7 +39,7 @@ public class CalculationTimeTests: IClassFixture<WebApplicationFactory<Program>>
     {
         await GetRequestExecutionTime(expression);
         var secondCalculationTime = await GetRequestExecutionTime(expression);
-        Assert.True(secondCalculationTime <= 1500);
+        Assert.True(secondCalculationTime <= 10);
     }
     
     private async Task<long> GetRequestExecutionTime(string expression)
