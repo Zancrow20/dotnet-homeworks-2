@@ -35,7 +35,4 @@ public class ExpressionConverter
 
     private void VisitConstant(ConstantExpression constantExpression) =>
         ExpressionsMap.Add(constantExpression, Array.Empty<Expression>());
-
-    public void Clear()
-        => ExpressionsMap.Clear();
 }
