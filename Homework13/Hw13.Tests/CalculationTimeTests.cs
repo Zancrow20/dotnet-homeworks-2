@@ -1,10 +1,11 @@
 using System.Diagnostics;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Hw13CacheCalculator;
-using Hw9.Tests;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
-namespace Hw13CacheCalc.Tests;
+namespace Hw13.Tests;
 
 public class CalculationTimeTests: IClassFixture<WebApplicationFactory<Program>>
 {

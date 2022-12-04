@@ -1,13 +1,14 @@
 using System.Globalization;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Hw13CacheCalculator;
 using Hw13CacheCalculator.Dto;
 using Hw13CacheCalculator.ErrorMessages;
-using Hw9.Tests;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
-namespace Hw13CacheCalc.Tests;
+namespace Hw13.Tests;
 
 public class IntegrationCalculatorControllerTests : IClassFixture<WebApplicationFactory<Program>>
 {

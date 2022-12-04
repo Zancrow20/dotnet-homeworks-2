@@ -1,10 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Hw13CacheCalculator.ErrorMessages;
 using Hw13CacheCalculator.Services.CalculatorVisitor;
 using Hw13CacheCalculator.Services.ExpressionConverter;
 using Xunit;
 
-namespace Hw13CacheCalc.Tests;
+namespace Hw13.Tests;
 
 public class CalculatorVisitorTests
 {
