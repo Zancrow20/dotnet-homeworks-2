@@ -15,8 +15,6 @@ public class RecursiveDescentParser : IRecursiveParser
 
     public RecursiveDescentParser(string expression)
     {
-        if (string.IsNullOrWhiteSpace(expression))
-            throw new NullReferenceException(EmptyString);
         _tokens = InputSplit.Split(expression)
             .SelectMany(str => str.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             .ToArray();
